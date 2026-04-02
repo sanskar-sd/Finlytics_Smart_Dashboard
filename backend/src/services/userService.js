@@ -1,8 +1,9 @@
 import User from "../models/userModel.js";
 import Organization from "../models/organizationModel.js";
 import bcrypt from "bcryptjs";
+import organizationModel from "../models/organizationModel.js";
 
-
+// [1] CREATE ROLES
 //admin can create roles..(admin,iewer,analyst)
 export const adminCreateRole = async (data,admin)=>{
     const{name,email,password,role}=data;
@@ -36,7 +37,81 @@ export const adminCreateRole = async (data,admin)=>{
     })
 
     user.password = undefined;
-
     return user;
+}
 
+
+
+
+
+
+// [2] GET ALL USERS
+//if admin wats to collect all useres in his organization then only admin can access this route
+export const getusers = async (admin) =>{
+    if(admin.role !== "admin") {
+        throw Error ("only admin can view users");
+    }
+
+    //give me all users belonging to this organization of admin
+
+    // name  role   organization
+    // abc   admin  org1
+    // xyz   viewer  org1
+    // pqr   analyst  org1
+    // lmn   admin    org1
+    return await User.find({organizationId:admin.organizationId}).select("-password"); //.select(-password)...this will not let password show in table when we get all users
+};
+
+
+
+
+
+
+// [3] UPDATE USER ROLE
+// admin can update user role
+export const updateRole = async(userId,role,admin) =>{
+    if(admin.role!=="admin"){
+        throw new Error("only admin can update user role");
+    }
+
+    if(!["admin","analyst","viewer"].includes(role)){
+        throw new Error("Invalid role");
+    }
+
+    const user = await User.findById(userId);
+    if(!user){
+        throw new Error("User not found")
+    }
+
+    //update role and save
+    user.role = role;
+    await user.save();
+
+    user.password = undefined;
+    return user;
+}
+
+
+
+// [4] ACTIVATE/DEACTIVATE USER
+export const updateStatus = async (userId,status,admin)=>{
+    if(admin.role!=="admin"){
+        throw new Error("only admin can update status");
+    }
+
+    if(!["active","inactive"].includes(status)){
+        throw new ErrorEvent("Invalid Status")
+    }
+
+    const user = await User.findById(userId);
+    if(!user){
+        throw new Error("User not found");
+    }
+
+    //update status and save
+    user.status=status;
+    await user.save();
+
+    user.password = undefined;
+    return user;
 }

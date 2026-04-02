@@ -1,21 +1,14 @@
-import User from "models/userModel.js";
-import Organization from "models/organizationModel.js";
-import bcrypt from "bcrypt";
-import generateToken from "utils/generateToken.js";
+import User from "..models/userModel.js";
+import Organization from "..models/organizationModel.js";
+import bcrypt from "bcryptjs";
+import generateToken from "..utils/generateToken.js";
 
-//register first admin
+//Register Admin
 export const registerAdmin = async (data) => {
     const {name,email,password,organizationName} = data;
 
-    //check if user already exists
-    const existingAdmin = await User.findOne({role:"admin"});
-
-    if(existingAdmin){
-        throw new Error("Admin already exists");
-    }
-
     //create organization
-    const org = await Organization.create({name:organizationName});
+    const org = await Organization.create({name:organizationName,createdBy:null});
 
     //hash password
     const hashedPassword = await bcrypt.hash(password,10);
@@ -37,18 +30,22 @@ export const registerAdmin = async (data) => {
 
 
 
-//login
+//login for admin,viewer,analyst
 export const loginUser = async ({email,password}) =>{
-
+    
+    //find user by email and check if user exists
     const user = await User.findOne({email});
-
     if(!user) throw Error("User not found");
 
+    //if user is inactive, throw error
     if(user.status === "inactive") throw Error("User is inactive");
 
-    const isMatch = await bcrypt.comaper(password,user.password);
-
+    //compare password
+    const isMatch = await bcrypt.compare(password,user.password);
     if(!isMatch) throw Error("Invalid credentials");
+
+    // remove password before sending
+    user.password = undefined;
 
     return {
         user,
@@ -56,13 +53,3 @@ export const loginUser = async ({email,password}) =>{
     };
 
 }
-
-
-
-
-
-
-
-
-
-

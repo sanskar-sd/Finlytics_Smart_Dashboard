@@ -30,6 +30,7 @@ export const registerAdmin = async (data) => {
 
 
 
+
 //login for admin,viewer,analyst
 export const loginUser = async ({email,password}) =>{
     

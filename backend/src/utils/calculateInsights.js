@@ -141,3 +141,73 @@ export const getHighestSpendingDay = (records) => {
 
 
 
+
+// [7] Income to Expense Ratio
+export const getIncomeExpenseRatio = (income,expense) => {
+    if(income === 0) return 0; //avoid division by zero
+    const ratio = expense/income;
+    return ratio.toFixed(2);
+}
+
+
+
+// [8] Warning for overspending (if expense > income)
+export const checkOverspending = (income,expense) => {
+    if(expense > income){
+        return "Warning: Your expenses exceed your income";
+    }
+
+    return "Your spending is within your income.";
+}
+
+
+
+// [9] Frequent Spending Category
+export const getMostFrequentCategory = (records) =>{
+    const freq={};
+
+    for(const record of records){
+        if(record.type === "expense"){
+            freq[record.category]=(freq[record.category] || 0) + 1;
+        }
+    }
+
+    let mostFreqCat=null;
+    let maxFreq=0;
+
+    for(let cat in freq){
+        if(freq[cat]>maxFreq){
+            maxFreq=freq[cat];
+            mostFreqCat=cat;
+        }
+    }
+
+    return{
+        category: mostFreqCat,
+        frequency: maxFreq,
+    };
+}
+
+
+
+
+
+// [10] Predict Future Spending (simple prediction based on average)
+export const getMonthlyPrediction = (records) => {
+    let totalExpense = 0;
+    const count=0;
+
+    for(const record of records){
+        if(record.type === "expense"){
+            totalExpense += record.amount;
+            count++;
+        }
+    }
+
+    if(count === 0) return 0; //avoid division by zero
+
+    const avgExpense = totalExpense/count;
+    return avgExpense*30; //predict for 30 days
+
+}
+

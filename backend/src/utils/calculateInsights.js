@@ -112,4 +112,32 @@ export const getAverageDailySpending = (records) => {
 
 
 
+// [6] Highest Spending Day
+export const getHighestSpendingDay = (records) => {
+    const map={};
+
+    for(const record of records){
+        if(record.type === "expense"){
+            const date=record.date.toDateString();
+            map[date]=(map[date] || 0) + record.amount;
+        }
+    }
+
+    let maxDay=null;
+    let maxAmount=0;
+
+    for (let day in map){
+        if(map[day]>maxAmount){
+            maxAmount=map[day];
+            maxDay=day;
+        }
+    }
+
+    return{
+        date: maxDay,
+        amount: maxAmount,
+    };
+}
+
+
 

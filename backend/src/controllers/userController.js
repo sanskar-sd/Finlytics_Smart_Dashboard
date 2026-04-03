@@ -3,11 +3,11 @@ import { adminCreateRole, getusers, updateRole, updateStatus } from "../services
 
 
 // [1] Create User
-export const createUser = async (requestAnimationFrame,resizeBy,next) => {
+export const createUser = async (req,res,next) => {
     try{
         const user = await adminCreateRole(req.body);
 
-        resizeBy.status(201).json({
+        res.status(201).json({
             success: true,
             message: "User created successfully",
             ...user
@@ -21,11 +21,11 @@ export const createUser = async (requestAnimationFrame,resizeBy,next) => {
 
 
 // [2] Get all users (admin only)
-export const getAllUsers = async (req,resizeBy,next) => {
+export const getAllUsers = async (req,res,next) => {
     try{
         const user = await getusers(req.user);
 
-        resizeBy.status(200).json({
+        res.status(200).json({
             success:true,
             message:"Users fetched successfully",
             users: user
@@ -38,9 +38,9 @@ export const getAllUsers = async (req,resizeBy,next) => {
 
 
 // [3] Update User Role (admin only)
-export const changeRole = async (req,resizeBy,next) => {
+export const changeRole = async (req,res,next) => {
     try{
-        const {userId,role} =  reqbody;
+        const {userId,role} =  req.body;
         const user = await updateRole(userId,role,req.user);
 
         res.status(200).json({

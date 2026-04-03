@@ -195,7 +195,7 @@ export const getMostFrequentCategory = (records) =>{
 // [10] Predict Future Spending (simple prediction based on average)
 export const getMonthlyPrediction = (records) => {
     let totalExpense = 0;
-    const count=0;
+    let count=0;
 
     for(const record of records){
         if(record.type === "expense"){

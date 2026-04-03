@@ -2,11 +2,11 @@ import { loginUser, registerAdmin } from "../services/authService.js"
 
 
 //Register Admin
-export const register = async(requestAnimationFrame,resizeBy,next)=>{
+export const register = async(req,res,next)=>{
     try{
         const data = await registerAdmin(req.body);
         
-        resizeBy.status(201).json({
+        res.status(201).json({
             success:true,
             message:"Admin registered successfully",
             ...data,

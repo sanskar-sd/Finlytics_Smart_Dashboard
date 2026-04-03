@@ -62,7 +62,7 @@ export const updateRecord = async(recordId,data,user)=>{
         throw new Error("Only admin can update records");
     }
 
-    const record = await Record.findOne(recordId);
+    const record = await Record.findById(recordId);
     if(!record) throw new Error({"message":"Record not found"});
 
     //ensure same organization

@@ -1,8 +1,8 @@
 import express from "express";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
-import { addRecord, editRecord, removeRecord } from "../controllers/recordController.js";
+import { addRecord, editRecord, getALLRecords, removeRecord } from "../controllers/recordController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import { getRecords } from "../services/recordService.js";
+
 
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const router = express.Router();
 router.post("/",protect,authorizeRoles("admin"),addRecord);
 
 //Get record (admin + analyst)
-router.get("/",protect,authorizeRoles("admin","analyst"),getRecords);
+router.get("/",protect,authorizeRoles("admin","analyst"),getALLRecords);
 
 //Update Records (admin only)
 router.put("/:id",protect,authorizeRoles("admin"),editRecord);

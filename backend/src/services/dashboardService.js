@@ -18,7 +18,7 @@ import {
 export const getDashboardData = async (user) => {
 
     //1. Get all records for the user's organization
-    const record = await Record.find({
+    const records = await Record.find({
         organizationId: user.organizationId,
         isDeleted:false, //exclude deleted records
     })
@@ -86,10 +86,7 @@ export const getDashboardData = async (user) => {
 
     const percentChange = calculatePercentageChange(thisMonth,lastMonth);
 
-    const trendMessage = generateInsight({
-        percent:percentChange,
-        label:"Overall Spending",
-    });
+    const trendMessage = generateInsight(percentChange, "Overall Spending");
 
 
 
@@ -99,7 +96,7 @@ export const getDashboardData = async (user) => {
     const averageDailySpending = getAverageDailySpending(records);
     const highestSpendingDay = getHighestSpendingDay(records);
     const incomeExpenseRatio = getIncomeExpenseRatio(totalIncome,totalExpense);
-    const overspendingAlert = checkOverspending(records);
+    const overspendingAlert = checkOverspending(totalIncome,totalExpense);
     const mostFrequentCategory = getMostFrequentCategory(records);
     const monthlyPrediction = getMonthlyPrediction(records);
 

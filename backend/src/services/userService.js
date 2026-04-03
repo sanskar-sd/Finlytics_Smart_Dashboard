@@ -19,7 +19,7 @@ export const adminCreateRole = async (data,admin)=>{
     }
 
     //check if user already exist
-    const existingUser = await User.findOne(email)
+    const existingUser = await User.findOne({email})
     if(existingUser){
         throw new Error("User already exist");
     }

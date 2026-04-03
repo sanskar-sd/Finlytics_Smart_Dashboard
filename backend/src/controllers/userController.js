@@ -5,7 +5,7 @@ import { adminCreateRole, getusers, updateRole, updateStatus } from "../services
 // [1] Create User
 export const createUser = async (req,res,next) => {
     try{
-        const user = await adminCreateRole(req.body);
+        const user = await adminCreateRole(req.body,req.user);
 
         res.status(201).json({
             success: true,

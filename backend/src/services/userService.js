@@ -54,11 +54,11 @@ export const getusers = async (admin) =>{
 
     //give me all users belonging to this organization of admin
 
-    // name  role   organization
-    // abc   admin  org1
-    // xyz   viewer  org1
-    // pqr   analyst  org1
-    // lmn   admin    org1
+    // name  role  organization     password
+    // abc   admin     org1     [X] pass not allow
+    // xyz   viewer    org1     [X] pass not allow
+    // pqr   analyst   org1     [X] pass not allow
+    // lmn   admin     org1     [X] pass not allow
     return await User.find({organizationId:admin.organizationId}).select("-password"); //.select(-password)...this will not let password show in table when we get all users
 };
 

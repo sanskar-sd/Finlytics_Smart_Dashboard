@@ -210,4 +210,3 @@ export const getMonthlyPrediction = (records) => {
     return avgExpense*30; //predict for 30 days
 
 }
-

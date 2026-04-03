@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import Organization from "../models/organizationModel.js";
 import bcrypt from "bcryptjs";
-import organizationModel from "../models/organizationModel.js";
+
 
 // [1] CREATE ROLES
 //admin can create roles..(admin,iewer,analyst)

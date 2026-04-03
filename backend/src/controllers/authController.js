@@ -1,4 +1,4 @@
-import { loginUser, registerAdmin } from "../services/authService"
+import { loginUser, registerAdmin } from "../services/authService.js"
 
 
 //Register Admin

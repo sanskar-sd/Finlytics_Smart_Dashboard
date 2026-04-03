@@ -1,4 +1,4 @@
-import Record from '../models/Record.js';
+import Record from '../models/recordModel.js';
 import {
     calculatePercentageChange,
     generateInsight,

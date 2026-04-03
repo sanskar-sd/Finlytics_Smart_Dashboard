@@ -1,4 +1,4 @@
-import { adminCreateRole, getusers, updateRole, updateStatus } from "../services/userService";
+import { adminCreateRole, getusers, updateRole, updateStatus } from "../services/userService.js";
 
 
 

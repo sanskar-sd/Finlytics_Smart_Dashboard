@@ -1,8 +1,8 @@
 import express from "express";
-import { authorizeRoles } from "../middleware/roleMiddleware";
-import { addRecord, editRecord, removeRecord } from "../controllers/recordController";
-import { protect } from "../middleware/authMiddleware";
-import { getRecords } from "../services/recordService";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import { addRecord, editRecord, removeRecord } from "../controllers/recordController.js";
+import { protect } from "../middleware/authMiddleware.js";
+import { getRecords } from "../services/recordService.js";
 
 
 const router = express.Router();

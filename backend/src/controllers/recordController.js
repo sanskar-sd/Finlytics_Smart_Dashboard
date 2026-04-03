@@ -1,4 +1,4 @@
-import { createRecord, deleteRecord, getRecords, updateRecord } from "../services/recordService";
+import { createRecord, deleteRecord, getRecords, updateRecord } from "../services/recordService.js";
 
 
 

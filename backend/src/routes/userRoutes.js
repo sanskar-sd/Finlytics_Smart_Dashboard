@@ -1,7 +1,7 @@
 import express from "express";
-import { protect } from "../middleware/authMiddleware";
-import { authorizeRoles } from "../middleware/roleMiddleware";
-import { changeRole, changeStatus, createUser, getAllUsers } from "../controllers/userController";
+import { protect } from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import { changeRole, changeStatus, createUser, getAllUsers } from "../controllers/userController.js";
 
 
 

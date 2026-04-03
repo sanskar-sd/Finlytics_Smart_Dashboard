@@ -1,4 +1,4 @@
-import { getDashboardData } from "../services/dashboardService";
+import { getDashboardData } from "../services/dashboardService.js";
 
 
 

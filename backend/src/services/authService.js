@@ -1,7 +1,7 @@
-import User from "..models/userModel.js";
-import Organization from "..models/organizationModel.js";
+import User from "../models/userModel.js";
+import Organization from "../models/organizationModel.js";
 import bcrypt from "bcryptjs";
-import generateToken from "..utils/generateToken.js";
+import generateToken from "../utils/generateToken.js";
 
 //Register Admin
 export const registerAdmin = async (data) => {

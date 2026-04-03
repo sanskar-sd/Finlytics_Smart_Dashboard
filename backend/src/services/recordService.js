@@ -86,10 +86,10 @@ export const updateRecord = async(recordId,data,user)=>{
 
 
 
-// [4] DELETE RECORD (only admin)
+// [4] DELETE RECORD (only admin)  ... soft delete
 export const deleteRecord = async (recordId,user)=>{
 
-    if(!user.role !== "admin"){
+    if(user.role !== "admin"){
         throw new Error("Only admin can delete records");
     }
 

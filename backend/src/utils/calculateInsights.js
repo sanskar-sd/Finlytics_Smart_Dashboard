@@ -48,6 +48,32 @@ export const generateInsight = (percent, label="value", positive="increased",neg
 
 
 
+// [3] Top Category
+export const getTopCategory = (records) =>{
+    const map={};
 
+    for(const record of records){
+        if(record.type === "expense"){
+            map[record.category]=(map[record.category] || 0) + record.amount;
+        }
+    }
+
+    //find category with max amount
+    let topCategory=null;
+    let maxAmount=0;
+
+    for(let cat in map){
+        if(map[cat]>maxAmount){
+            maxAmount=map[cat];
+            topCategory=cat;
+        }
+    }
+
+    return{
+        category: topCategory,
+        amount: maxAmount,
+    };
+    
+};
 
 

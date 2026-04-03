@@ -73,7 +73,43 @@ export const getTopCategory = (records) =>{
         category: topCategory,
         amount: maxAmount,
     };
-    
+
 };
+
+
+
+
+
+
+// [4] Savings Rate
+export const calculateSavingsRate = (income,expense) => {
+    if(income===0) return 0; //avoid division by zero
+
+    const savingsRate = ((income-expense)/income)*100;
+    return savingsRate.toFixed(1); //round to 1 decimal
+}
+
+
+
+
+// [5] Average Daily Spending
+export const getAverageDailySpending = (records) => {
+    let totalExpense = 0;
+    const dates = new Set();
+
+    for(const record of records){
+        if(record.type === "expense"){
+            totalExpense += record.amount;
+            dates.add(record.date.toDateString()); //group by date
+        }
+    }
+    const days = dates.size || 1; //avoid division by zero
+    const avgDaily = totalExpense/days;
+    return avgDaily.toFixed(2);
+}
+
+
+
+
 
 

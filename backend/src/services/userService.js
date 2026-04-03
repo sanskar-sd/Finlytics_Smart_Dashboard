@@ -100,7 +100,7 @@ export const updateStatus = async (userId,status,admin)=>{
     }
 
     if(!["active","inactive"].includes(status)){
-        throw new ErrorEvent("Invalid Status")
+        throw new Error("Invalid Status")
     }
 
     const user = await User.findById(userId);

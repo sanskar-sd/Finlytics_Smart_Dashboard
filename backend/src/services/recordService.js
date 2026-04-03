@@ -41,8 +41,8 @@ export const getRecords = async (user,filter) =>{
 
     if(filter.startDate && filter.endDate){
         query.date={
-            $gte: filter.startDate, //greater than or equal
-            $lte: filter.endDate, //less than or equal
+            $gte: new Date(filter.startDate), //greater than or equal
+            $lte: new Date(filter.endDate), //less than or equal
         };
     }
 
@@ -66,7 +66,7 @@ export const updateRecord = async(recordId,data,user)=>{
     if(!record) throw new Error({"message":"Record not found"});
 
     //ensure same organization
-    if(record.organizationId.toString() != user.organizationId){
+    if(record.organizationId.toString() != user.organizationId.toString()){
         throw new Error("Unauthorized to update this record");
     }
 

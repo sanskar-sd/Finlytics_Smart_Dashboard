@@ -8,7 +8,7 @@ export const registerAdmin = async (data) => {
     const {name,email,password,organizationName} = data;
 
     //create organization
-    const org = await Organization.create({name:organizationName,createdBy:null});
+    const org = await Organization.create({name:organizationName});
 
     //hash password
     const hashedPassword = await bcrypt.hash(password,10);
@@ -21,6 +21,9 @@ export const registerAdmin = async (data) => {
         role:"admin",
         organizationId:org._id
     });
+
+    org.createdBy = user._id;
+    await org.save();
     
     return{
         user,
@@ -48,8 +51,18 @@ export const loginUser = async ({email,password}) =>{
     // remove password before sending
     user.password = undefined;
 
+
+    //dont pass user directly.. it still got internal fields
+
+    const safeUser = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+    };
+
     return {
-        user,
+        user:safeUser,
         token: generateToken(user),
     };
 

@@ -10,7 +10,7 @@ export const getDashboard = async (req,res,next) =>{
         res.status(200).json({
             success:true,
             message:"Dashboard data fetched successfully",
-            ...data
+            data
         })
     }catch(error){
         next(error);

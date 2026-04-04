@@ -1,8 +1,9 @@
 //checks is user is logged in using JWT token and adds user info to req.user
 
 import jwt from "jsonwebtoken";
+import User from "../models/userModel.js"
 
-export const protect = (req,res,next)=>{
+export const protect = async (req,res)=>{
     try{
         //get token from header
         const authHeader = req.headers.authorization;
@@ -16,8 +17,8 @@ export const protect = (req,res,next)=>{
         const decoded = jwt.verify(token,process.env.JWT_SECRET);
 
         //add user info to req.user
+        const user = await User.findById(decoded.id).select("-password");
         req.user = decoded;
-        next();
 
     }catch(error){
         return res.status(401).json({message: "Not authorized or Invalid token"});

@@ -14,7 +14,7 @@ export const createRecord = async (data,user)=>{
         date: data.date,
         notes: data.notes,
         organizationId: user.organizationId,
-        createdBy: user._id
+        createdBy: user.id
     });
     return record;
 };
@@ -66,7 +66,7 @@ export const updateRecord = async(recordId,data,user)=>{
     if(!record) throw new Error({"message":"Record not found"});
 
     //ensure same organization
-    if(record.organizationId.toString() != user.organizationId.toString()){
+    if(record.organizationId.toString() !== user.organizationId.toString()){
         throw new Error("Unauthorized to update this record");
     }
 

@@ -24,9 +24,18 @@ export const registerAdmin = async (data) => {
 
     org.createdBy = user._id;
     await org.save();
+
+    //dont pass user directly.. it still got internal fields
+
+    const safeUser = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+    };
     
     return{
-        user,
+        user:safeUser,
         token: generateToken(user),
     };
 };

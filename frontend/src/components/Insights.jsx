@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Stat({title, value, subtitle}){
+function Stat({title, value, subtitle, color}){
   return (
     <div className="stat">
-      <div className="num">{value}</div>
+      <div className="num" style={ color ? {color} : undefined }>{value}</div>
       <div style={{fontSize:12,marginTop:6}}>{title}</div>
       {subtitle && <div style={{fontSize:11,opacity:0.7}}>{subtitle}</div>}
     </div>
@@ -24,15 +24,42 @@ const fmtPercent = v => {
   return `${n >= 0 ? '+' : ''}${n.toFixed(2)}%`;
 }
 
+const fmtDate = d => {
+  if (!d) return '-'
+  try {
+    const dt = typeof d === 'string' || typeof d === 'number' ? new Date(d) : d
+    if (Number.isNaN(dt.getTime && dt.getTime())) return String(d)
+    return dt.toLocaleDateString()
+  } catch (e) {
+    return String(d)
+  }
+}
+
 const renderVal = v => {
   if (v == null) return '-';
   if (typeof v === 'number') return fmtNumber(v);
   if (typeof v === 'string') return v;
   if (typeof v === 'object') {
-    // common patterns: { category, frequency } or { name, value }
-    if (v.category && v.frequency !== undefined) return `${v.category} (${v.frequency})`;
+    // common shapes
+    if (v.category && (v.frequency !== undefined || v.count !== undefined)) {
+      const freq = v.frequency ?? v.count
+      return `${v.category} (${freq})`
+    }
     if (v.name && v.value !== undefined) return `${v.name} (${fmtNumber(v.value)})`;
-    return JSON.stringify(v);
+    if (v.name && v.amount !== undefined) return `${v.name} (${fmtNumber(v.amount)})`;
+    if ((v.date || v.day) && (v.amount !== undefined || v.value !== undefined)) {
+      const date = v.date ?? v.day
+      const amt = v.amount ?? v.value
+      return `${fmtDate(date)} — ${fmtNumber(amt)}`
+    }
+    // highestSpendingDay may be { date: '2026-04-01', total: 123 }
+    if ((v.date || v.day) && (v.total !== undefined)) return `${fmtDate(v.date ?? v.day)} — ${fmtNumber(v.total)}`
+    // fallback: try to stringify key pairs nicely
+    try {
+      return Object.entries(v).map(([k, val]) => `${k}: ${typeof val === 'number' ? fmtNumber(val) : String(val)}`).join(', ')
+    } catch (e) {
+      return JSON.stringify(v)
+    }
   }
   return String(v);
 }
@@ -52,62 +79,63 @@ export default function Insights({data}){
   const insights = data?.insights || {};
 
   return (
-    <div className="card">
-      <h3>Insights</h3>
-
-      <div style={{marginBottom:12}}>
-        <div className="stats">
-          <Stat title="Total Income" value={fmtNumber(totalIncome)} />
-          <Stat title="Total Expense" value={fmtNumber(totalExpense)} />
-          <Stat title="Net" value={net == null ? '-' : fmtNumber(net)} subtitle={net == null ? '' : (net >=0 ? 'Net positive' : 'Net negative')} />
-        </div>
+    <div className="card insights">
+      <div className="page-header">
+        <h3>Insights</h3>
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-        <div>
-          <h4 style={{margin:'8px 0'}}>Insight Metrics</h4>
-          <table style={{width:'100%',borderCollapse:'collapse'}}>
-            <tbody>
-              <tr><td style={{padding:8,fontWeight:600}}>Percent Change</td><td style={{padding:8}}>{fmtPercent(insights.percentChange)}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Trend Message</td><td style={{padding:8}}>{insights.trendMessage || '-'}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Top Category</td><td style={{padding:8}}>{renderVal(insights.topCategory || insights.top_category)}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Savings Rate</td><td style={{padding:8}}>{insights.savingsRate != null ? `${Number(insights.savingsRate).toFixed(2)}%` : '-'}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Avg Daily Spending</td><td style={{padding:8}}>{fmtNumber(insights.averageDailySpending)}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Highest Spending Day</td><td style={{padding:8}}>{insights.highestSpendingDay ? (typeof insights.highestSpendingDay === 'object' ? JSON.stringify(insights.highestSpendingDay) : insights.highestSpendingDay) : '-'}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Income/Expense Ratio</td><td style={{padding:8}}>{insights.incomeExpenseRatio != null ? fmtNumber(insights.incomeExpenseRatio) : '-'}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Overspending Alert</td><td style={{padding:8}}>{insights.overspendingAlert != null ? String(insights.overspendingAlert) : '-'}</td></tr>
-              <tr><td style={{padding:8,fontWeight:600}}>Most Frequent Category</td><td style={{padding:8}}>{renderVal(insights.mostFrequentCategory)}</td></tr>
-            </tbody>
-          </table>
+          <div className="insights-summary" style={{marginBottom:12}}>
+            <div className="stats">
+              <Stat title="Total Income" value={fmtNumber(totalIncome)} color="#16a34a" />
+              <Stat title="Total Expense" value={fmtNumber(totalExpense)} color="#dc2626" />
+              <Stat title="Net" value={net == null ? '-' : fmtNumber(net)} subtitle={net == null ? '' : (net >=0 ? 'Net positive' : 'Net negative')} color="#d97706" />
+            </div>
+          </div>
+
+      <div className="insights-body">
+        <div className="insights-left">
+          <h4 className="section-title">Insight Metrics</h4>
+
+          {(() => {
+            const fields = [
+              { key: 'percentChange', label: 'Percent Change', display: fmtPercent(insights.percentChange) },
+              { key: 'trendMessage', label: 'Trend', display: insights.trendMessage || '-' },
+              { key: 'topCategory', label: 'Top Category', display: renderVal(insights.topCategory || insights.top_category) },
+              { key: 'savingsRate', label: 'Savings Rate', display: insights.savingsRate != null ? `${Number(insights.savingsRate).toFixed(2)}%` : '-' },
+              { key: 'averageDailySpending', label: 'Avg Daily Spending', display: fmtNumber(insights.averageDailySpending) },
+              { key: 'highestSpendingDay', label: 'Highest Spending Day', display: renderVal(insights.highestSpendingDay) },
+              { key: 'incomeExpenseRatio', label: 'Income/Expense Ratio', display: insights.incomeExpenseRatio != null ? fmtNumber(insights.incomeExpenseRatio) : '-' },
+              { key: 'overspendingAlert', label: 'Overspending Alert', display: insights.overspendingAlert != null ? String(insights.overspendingAlert) : '-' },
+              { key: 'mostFrequentCategory', label: 'Most Frequent Category', display: renderVal(insights.mostFrequentCategory) },
+              { key: 'monthlyPrediction', label: 'Monthly Prediction', display: insights.monthlyPrediction ? (typeof insights.monthlyPrediction === 'object' ? Object.entries(insights.monthlyPrediction).map(([k,v])=>`${k}: ${fmtNumber(v)}`).join(', ') : String(insights.monthlyPrediction)) : '-' }
+            ];
+
+            return (
+              <div className="insight-cards">
+                {fields.map((f,i)=> (
+                  <div key={f.key} className={`insight-card color-${(i%10)+1}`}>
+                    <div className="card-index">Sr {i+1}</div>
+                    <div className="card-key">{f.label}</div>
+                    <div className="card-value">{f.display}</div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+
         </div>
 
-        <div>
-          <h4 style={{margin:'8px 0'}}>Monthly Prediction</h4>
-          {insights.monthlyPrediction ? (
-            <div style={{display:'flex',flexDirection:'column',gap:8}}>
-              {typeof insights.monthlyPrediction === 'object' ? (
-                Object.entries(insights.monthlyPrediction).map(([k,v])=> (
-                  <div key={k} style={{padding:8,background:'#fff',borderRadius:8,boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
-                    <div style={{fontWeight:700}}>{k}</div>
-                    <div style={{fontSize:13,opacity:0.85}}>{fmtNumber(v)}</div>
-                  </div>
-                ))
-              ) : (
-                <div>{String(insights.monthlyPrediction)}</div>
-              )}
+        <div className="insights-right">
+          <div className="panel-card category-panel">
+            <h4 className="section-title">Category Breakdown</h4>
+            <div className="category-breakdown">
+              {topCategories.length===0 ? <div>No category data</div> : topCategories.map((c,i)=> (
+                <div key={c.cat} className={`category-chip color-cat-${(i%8)+1}`}>
+                  <div className="cat-name">{c.cat}</div>
+                  <div className="cat-val">{fmtNumber(c.value)}</div>
+                </div>
+              ))}
             </div>
-          ) : (
-            <div>No prediction data</div>
-          )}
-
-          <h4 style={{margin:'12px 0 8px'}}>Category Breakdown</h4>
-          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-            {topCategories.length===0 ? <div>No category data</div> : topCategories.map(c=> (
-              <div key={c.cat} style={{padding:8,background:'#fff',borderRadius:8,boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
-                <div style={{fontWeight:600}}>{c.cat}</div>
-                <div style={{fontSize:12,opacity:0.75}}>{fmtNumber(c.value)}</div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

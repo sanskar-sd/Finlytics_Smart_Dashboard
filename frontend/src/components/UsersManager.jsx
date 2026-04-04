@@ -99,7 +99,7 @@ export default function UsersManager(){
         <div style={{maxHeight:260,overflow:'auto'}}>
           {users.length===0? <div>No users</div> : (
             <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
               <tbody>
                 {users.map(u=> (
                   <tr key={u._id}>
@@ -107,24 +107,7 @@ export default function UsersManager(){
                     <td>{u.email}</td>
                     <td>{u.role}</td>
                     <td>{u.status}</td>
-                    <td>
-                      {/* when in fetch mode keep actions minimal; role/status edits happen via Update Role/Status modes */}
-                      {mode === 'fetch' ? (
-                        <span style={{opacity:0.85}}>Use Update Role / Update Status</span>
-                      ) : (
-                        <>
-                          <select defaultValue={u.role} onChange={e=>onRole(u._id,e.target.value)}>
-                            <option value="viewer">Viewer</option>
-                            <option value="analyst">Analyst</option>
-                            <option value="admin">Admin</option>
-                          </select>
-                          <select defaultValue={u.status} onChange={e=>onStatus(u._id,e.target.value)} style={{marginLeft:8}}>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                          </select>
-                        </>
-                      )}
-                    </td>
+                    {/* per-row actions removed */}
                   </tr>
                 ))}
               </tbody>

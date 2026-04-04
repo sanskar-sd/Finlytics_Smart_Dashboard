@@ -42,6 +42,7 @@ export const getAllUsers = async (req,res,next) => {
 export const changeRole = async (req,res,next) => {
     try{
         const {userId,role} =  req.body;
+        console.debug('[userController] changeRole called', { by: req.user?._id?.toString(), byRole: req.user?.role, body: req.body });
         const user = await updateRole(userId,role,req.user);
 
         res.status(200).json({
@@ -60,6 +61,7 @@ export const changeRole = async (req,res,next) => {
 export const changeStatus = async (req,res,next)=>{
     try{
         const {userId,status} = req.body;
+        console.debug('[userController] changeStatus called', { by: req.user?._id?.toString(), byRole: req.user?.role, body: req.body });
         const user = await updateStatus(userId,status,req.user);
 
         res.status(200).json({

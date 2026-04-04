@@ -197,7 +197,6 @@ export default function RecordsManager({ readonly=false }){
           </div>
         </div>
       )}
-      )}
 
       {/* Create / Update form (shown for create or update) */}
       {(!readonly && (mode==='create' || mode==='update')) && (
@@ -232,10 +231,17 @@ export default function RecordsManager({ readonly=false }){
                     <td style={{padding:8}}>{r.amount}</td>
                     <td style={{padding:8}}>{r.notes}</td>
                     <td style={{padding:8}}>
-                      {!readonly && (mode==='update' && <button onClick={()=>onEdit(r)}>Edit</button>)}
-                      {!readonly && (mode==='delete' && <button onClick={()=>onDelete(r._id)} style={{marginLeft:8}}>Delete</button>)}
-                      {!readonly && (mode==='get' && <><button onClick={()=>onEdit(r)}>Edit</button><button onClick={()=>onDelete(r._id)} style={{marginLeft:8}}>Delete</button></>)}
-                      {readonly && <span style={{opacity:0.8}}>Read-only</span>}
+                      {!readonly ? (
+                        mode === 'update' ? (
+                          <button onClick={()=>onEdit(r)}>Edit</button>
+                        ) : mode === 'delete' ? (
+                          <button onClick={()=>onDelete(r._id)}>Delete</button>
+                        ) : (
+                          <span style={{opacity:0.85}}>Select Update or Delete mode</span>
+                        )
+                      ) : (
+                        <span style={{opacity:0.8}}>Read-only</span>
+                      )}
                     </td>
                   </tr>
                 ))}

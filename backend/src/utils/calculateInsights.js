@@ -26,7 +26,7 @@ export const calculatePercentageChange = (current,previous) =>{
 
 // [2] Data Insights .. convert data into textual insights
 //tell %increase in income, expense, savings with some text
-export const generateInsight = (percent, label="value", positive="increased",negative="decreased") => {
+export const generateInsight = (percent, label="value") => {
 
     const value = Math.abs(percent).toFixed(1); //round to 1 decimal
 

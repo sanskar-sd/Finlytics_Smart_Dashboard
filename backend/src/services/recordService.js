@@ -14,7 +14,7 @@ export const createRecord = async (data,user)=>{
         date: data.date,
         notes: data.notes,
         organizationId: user.organizationId,
-        createdBy: user.id
+        createdBy: user.id || user._id,
     });
     return record;
 };

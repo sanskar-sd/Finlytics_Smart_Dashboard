@@ -17,6 +17,8 @@ import {
 // MAIN DASHBOARD SERVICE 
 export const getDashboardData = async (user) => {
 
+
+    
     //1. Get all records for the user's organization
     const records = await Record.find({
         organizationId: user.organizationId,

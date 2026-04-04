@@ -146,11 +146,9 @@ Each financial record contains:
 ## ⚡ Optional Enhancements (Implemented / Planned)
 
 * JWT Authentication
-* Pagination for records
 * Search functionality
 * Sorting (date, amount)
-* API documentation (Swagger)
-* Rate limiting
+* API Deployment (Render)
 * Unit testing (Jest)
 
 ---
@@ -167,14 +165,39 @@ Each financial record contains:
 ## 📂 Project Structure
 
 ```
-src/
- ├── controllers/
- ├── services/
- ├── models/
- ├── routes/
- ├── middleware/
- ├── utils/
- └── config/
+Zorvy/
+│
+├── backend/
+│ ├── src/
+│ │ ├── config/ # Database connection
+│ │ ├── controllers/ # Route controllers (auth, users, records, dashboard)
+│ │ ├── middleware/ # Auth, role-based access, error handling
+│ │ ├── models/ # Mongoose schemas (User, Record, Organization)
+│ │ ├── routes/ # API routes
+│ │ ├── services/ # Business logic layer
+│ │ ├── utils/ # Helper functions & insights calculations
+│ │ └── app.js # Express app setup
+│ │
+│ ├── server.js # Entry point
+│ ├── .env # Environment variables (not pushed)
+│ ├── package.json
+│
+├── frontend/
+│ ├── src/
+│ │ ├── components/ # Reusable UI components
+│ │ ├── pages/ # Role-based pages (Admin, Analyst, Viewer)
+│ │ ├── services/ # API calls (auth, records, users)
+│ │ ├── App.jsx # Main app component
+│ │ ├── main.jsx # Entry point
+│ │ └── styles.css # Global styles
+│ │
+│ ├── public/ # Static assets
+│ ├── index.html
+│ ├── .env # Frontend env variables
+│ ├── package.json
+│
+├── README.md # Project documentation
+└── .gitignore
 ```
 
 ---
@@ -223,18 +246,17 @@ src/
 
 ---
 
-## 💬 Interview Explanation
-
-> “I built an organization-based finance backend with role-based access control and designed analytical APIs to generate insights like spending trends, percentage changes, and anomaly detection using aggregation queries.”
-
----
-
 ## 🚀 Future Improvements
 
 * AI-based expense categorization
 * Predictive analytics
 * Real-time notifications
 * Multi-organization support per user
+
+---
+## ScreenShots
+
+[text](ReadMe.md) ![text](assets/AdminDashboard.png) ![text](assets/AdminProfile.png) ![text](assets/AnalystDashboard.png) ![text](assets/InsightsOnAdminPage.png) ![text](assets/RecordManagementByAdmin.png) ![text](assets/RecordViewByAnalyst.png) ![text](<assets/Screenshot 2026-04-05 002440.png>) ![text](assets/UserManagementByAdmin.png) ![text](assets/ViewerDashboard.png)
 
 ---
 

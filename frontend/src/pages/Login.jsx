@@ -33,9 +33,9 @@ export default function Login(){
           <button className="btn" type="submit">Login</button>
           {err && <div className="error">{err}</div>}
         </form>
-        <div style={{textAlign:'center',marginTop:8}}>
+        {/* <div style={{textAlign:'center',marginTop:8}}>
           <small>Need to create the first admin? <a href="/register">Register as Admin</a></small>
-        </div>
+        </div> */}
       </div>
     </div>
   )

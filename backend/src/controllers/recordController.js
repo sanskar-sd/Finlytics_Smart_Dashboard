@@ -5,6 +5,7 @@ import { createRecord, deleteRecord, getRecords, updateRecord } from "../service
 // [1] Create Record
 export const addRecord = async (req,res,next)=>{
     try{
+        console.debug('[recordController] addRecord called by', { id: req.user?._id?.toString(), role: req.user?.role });
         const record = await createRecord(req.body,req.user);
 
         res.status(201).json({

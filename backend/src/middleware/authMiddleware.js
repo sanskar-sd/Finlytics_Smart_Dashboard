@@ -23,6 +23,9 @@ export const protect = async (req,res,next)=>{
             return res.status(401).json({message:"User not Found"});
         }
 
+        // debug: log the authenticated user role for troubleshooting
+        console.debug('[authMiddleware] authenticated user:', { id: user?._id?.toString(), role: user?.role, organizationId: user?.organizationId?.toString() });
+
         req.user = user;
         next();
 

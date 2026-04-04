@@ -1,13 +1,12 @@
 import User from "../models/userModel.js";
-import Organization from "../models/organizationModel.js";
 import bcrypt from "bcryptjs";
 
 
 // [1] CREATE ROLES
-//admin can create roles..(admin,iewer,analyst)
+//admin can create roles..(admin,viewer,analyst)
 export const adminCreateRole = async (data,admin)=>{
     const{name,email,password,role}=data;
-
+    console.log("admin",admin)
     //only admin is allowed
     if(admin.role !== "admin") {
         throw Error("only admin can create users");

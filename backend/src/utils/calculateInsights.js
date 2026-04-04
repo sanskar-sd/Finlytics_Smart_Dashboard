@@ -31,11 +31,11 @@ export const generateInsight = (percent, label="value") => {
     const value = Math.abs(percent).toFixed(1); //round to 1 decimal
 
     if(percent > 0){
-        return `Your ${label} has ${positive} by ${value}% compared to last month.`;
+        return `Your ${label} has increased by ${value}% compared to last month.`;
     }
 
     if(percent < 0){
-        return `Your ${label} has ${negative} by ${value}% compared to last month.`;
+        return `Your ${label} has decreased by ${value}% compared to last month.`;
     }
 
     return `Your ${label} is unchanged compared to last month.`;
@@ -145,7 +145,7 @@ export const getHighestSpendingDay = (records) => {
 // [7] Income to Expense Ratio
 export const getIncomeExpenseRatio = (income,expense) => {
     if(income === 0) return 0; //avoid division by zero
-    const ratio = expense/income;
+    const ratio = income/expense;
     return ratio.toFixed(2);
 }
 
@@ -195,18 +195,17 @@ export const getMostFrequentCategory = (records) =>{
 // [10] Predict Future Spending (simple prediction based on average)
 export const getMonthlyPrediction = (records) => {
     let totalExpense = 0;
-    let count=0;
+    const expenseDays = new Set();
 
-    for(const record of records){
-        if(record.type === "expense"){
+    for (const record of records) {
+        if (record.type === "expense") {
             totalExpense += record.amount;
-            count++;
+            expenseDays.add(record.date.toDateString());
         }
     }
 
-    if(count === 0) return 0; //avoid division by zero
+    const days = expenseDays.size || 1;
+    const avgPerDay = totalExpense / days;
 
-    const avgExpense = totalExpense/count;
-    return avgExpense*30; //predict for 30 days
-
-}
+    return (avgPerDay * 30).toFixed(2);
+};

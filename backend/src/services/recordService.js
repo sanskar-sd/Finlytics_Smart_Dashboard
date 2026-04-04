@@ -93,8 +93,8 @@ export const deleteRecord = async (recordId,user)=>{
         throw new Error("Only admin can delete records");
     }
 
-    const record = await Record.findOne(recordId);
-    if(!record) throw new Error({"message":"Record not found"});
+    const record = await Record.findById(recordId);
+    if(!record) throw new Error("Record not found");
 
     //ensure same organization
     if(record.organizationId.toString() != user.organizationId){

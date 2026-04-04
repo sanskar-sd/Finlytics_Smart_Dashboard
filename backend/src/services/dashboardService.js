@@ -41,50 +41,80 @@ export const getDashboardData = async (user) => {
 
 
     //3.Category Breakdown
-        const categoryMap = {};
-        records.forEach((r) => {
-        if (!categoryMap[r.category]) {
-        categoryMap[r.category] = 0;
-        }
-        categoryMap[r.category] += r.amount;
-    });
+    const categoryMap = {};
+
+    records.forEach((r) => {
+    if (!categoryMap[r.category]) {
+        categoryMap[r.category] = {
+            income: 0,
+            expense: 0,
+        };
+    }
+
+    if (r.type === "income") {
+        categoryMap[r.category].income += r.amount;
+    } else {
+        categoryMap[r.category].expense += r.amount;
+    }
+});
 
 
     //4.Monthly Trends
     const monthlyTrends = {};
-    records.forEach((r) => {
+
+records.forEach((r) => {
     const month = new Date(r.date).toLocaleString("default", {
-      month: "short",
-      year: "numeric",
+        month: "short",
+        year: "numeric",
     });
 
     if (!monthlyTrends[month]) {
-      monthlyTrends[month] = 0;
+        monthlyTrends[month] = {
+            income: 0,
+            expense: 0,
+        };
     }
 
-    monthlyTrends[month] += r.amount;
-  });
+    if (r.type === "income") {
+        monthlyTrends[month].income += r.amount;
+    } else {
+        monthlyTrends[month].expense += r.amount;
+    }
+});
 
 
 
-  //5.This Month vs Last Month
-    let thisMonth=0;
-    let lastMonth=0;
+//5. This Month vs Last Month (BASED ON DATA, NOT SYSTEM DATE)
 
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const lastMonthIndex = currentMonth - 1;
+// sort records by date (latest first)
+const sortedRecords = records
+    .filter(r => r.type === "expense")
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    records.forEach((r) => {
-        const recordDate = new Date(r.date);
-        const recordMonth = recordDate.getMonth();
+// get latest month from data
+const latestDate = sortedRecords[0]?.date;
+const latestMonth = new Date(latestDate).getMonth();
+const latestYear = new Date(latestDate).getFullYear();
 
-        if(recordMonth === currentMonth){
-            thisMonth +=r.amount;
-        } else if(recordMonth === lastMonthIndex){
-            lastMonth +=r.amount;
-        }
-    });
+// previous month
+const prevMonthDate = new Date(latestYear, latestMonth - 1);
+const prevMonth = prevMonthDate.getMonth();
+const prevYear = prevMonthDate.getFullYear();
+
+let thisMonth = 0;
+let lastMonth = 0;
+
+sortedRecords.forEach((r) => {
+    const d = new Date(r.date);
+    const m = d.getMonth();
+    const y = d.getFullYear();
+
+    if (m === latestMonth && y === latestYear) {
+        thisMonth += r.amount;
+    } else if (m === prevMonth && y === prevYear) {
+        lastMonth += r.amount;
+    }
+});
 
     const percentChange = calculatePercentageChange(thisMonth,lastMonth);
 
